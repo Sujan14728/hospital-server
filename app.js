@@ -17,6 +17,6 @@ app.use(cookieParser());
 
 const adminRoutes = require("./routes/admin.route");
 
-app.use("/admin", adminRoutes);
+app.use("/api/admin", adminRoutes);
 
 module.exports = app;

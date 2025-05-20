@@ -1,63 +1,64 @@
-const prisma = require("../prisma/client");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const createAdmin = async (req, res) => {
   const { email, password } = req.body;
+  const db = req.app.locals.db;
+
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const admin = await prisma.admin.create({
-      data: { email, password: hashedPassword },
-    });
+    const [result] = await db.execute(
+      "INSERT INTO admin (email, password) VALUES (?, ?)",
+      [email, hashedPassword]
+    );
+
     res.status(201).json({
       status: "success",
-      data: admin,
+      data: { id: result.insertId, email },
       message: "Admin created successfully!!!",
     });
   } catch (error) {
+    console.error("Create admin error:", error);
     res.status(500).json({ status: "error", error: "Failed to create admin" });
   }
 };
 
 const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
+  const db = req.app.locals.db;
 
   try {
-    const admin = await prisma.admin.findUnique({
-      where: { email },
-    });
+    const [rows] = await db.execute(
+      "SELECT * FROM admin WHERE email = ?",
+      [email]
+    );
 
-    if (!admin) {
+    if (rows.length === 0) {
       return res
         .status(401)
         .json({ status: "error", message: "Invalid email or password" });
     }
 
+    const admin = rows[0];
     const isMatch = await bcrypt.compare(password, admin.password);
-    console.log(1);
 
     if (!isMatch) {
       return res
         .status(401)
         .json({ status: "error", message: "Invalid email or password" });
     }
-    console.log(2);
 
     const token = jwt.sign(
       { id: admin.id, email: admin.email },
       process.env.JWT_SECRET,
-      {
-        expiresIn: "1d",
-      }
+      { expiresIn: "1d" }
     );
-    console.log(3);
 
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000,
     });
-    console.log(4);
 
     res.json({
       status: "success",
@@ -71,8 +72,10 @@ const loginAdmin = async (req, res) => {
 };
 
 const getAdmin = async (req, res) => {
+  const db = req.app.locals.db;
+
   try {
-    const admins = await prisma.admin.findMany();
+    const [admins] = await db.execute("SELECT id, email FROM admin");
     res.json({ status: "success", data: admins });
   } catch (error) {
     res.status(500).json({ status: "error", message: "Failed to get admins" });
@@ -81,15 +84,21 @@ const getAdmin = async (req, res) => {
 
 const getAdminById = async (req, res) => {
   const { id } = req.params;
+  const db = req.app.locals.db;
+
   try {
-    const admin = await prisma.admin.findUnique({
-      where: { id: parseInt(id) },
-    });
-    if (!admin)
+    const [rows] = await db.execute(
+      "SELECT id, email FROM admin WHERE id = ?",
+      [id]
+    );
+
+    if (rows.length === 0) {
       return res
         .status(404)
         .json({ status: "error", message: "Admin not found" });
-    res.json({ status: "success", data: admin });
+    }
+
+    res.json({ status: "success", data: rows[0] });
   } catch (error) {
     res.status(500).json({ status: "error", message: "Failed to get admin" });
   }
@@ -98,14 +107,18 @@ const getAdminById = async (req, res) => {
 const updateAdmin = async (req, res) => {
   const { id } = req.params;
   const { email, password } = req.body;
+  const db = req.app.locals.db;
+
   try {
-    const admin = await prisma.admin.update({
-      where: { id: parseInt(id) },
-      data: { email, password },
-    });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await db.execute(
+      "UPDATE admin SET email = ?, password = ? WHERE id = ?",
+      [email, hashedPassword, id]
+    );
+
     res.json({
       status: "success",
-      data: admin,
+      data: { id: parseInt(id), email },
       message: "Admin updated successfully!!!",
     });
   } catch (error) {
@@ -117,10 +130,10 @@ const updateAdmin = async (req, res) => {
 
 const deleteAdmin = async (req, res) => {
   const { id } = req.params;
+  const db = req.app.locals.db;
+
   try {
-    await prisma.admin.delete({
-      where: { id: parseInt(id) },
-    });
+    await db.execute("DELETE FROM admin WHERE id = ?", [id]);
     res.json({ message: "Admin deleted" });
   } catch (error) {
     res

@@ -21,4 +21,20 @@ const createContact = async (req, res) => {
   }
 };
 
-module.exports = { createContact };
+const getContact = async (req, res) => {
+  const db = req.app.locals.db;
+
+  try {
+    const [contacts] = await db.execute("SELECT * FROM contact");
+    res.json({ status: "success", data: contacts });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: "error", message: "Failed to get contacts" });
+  }
+};
+
+module.exports = {
+  createContact,
+  getContact,
+};

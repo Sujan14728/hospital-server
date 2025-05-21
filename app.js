@@ -17,10 +17,12 @@ app.use(cookieParser());
 
 const adminRoutes = require("./routes/admin.route");
 const sectionRoutes = require("./routes/section.route");
-const mediaRoutes = require('./routes/media.route')
+const mediaRoutes = require("./routes/media.route");
+const galleryRoutes = require("./routes/gallery.route");
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/section", sectionRoutes);
-app.use('/api/media',mediaRoutes)
+app.use("/api/media", mediaRoutes);
+app.use("/api/gallery", galleryRoutes);
 
 module.exports = app;

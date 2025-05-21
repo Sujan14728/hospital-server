@@ -34,7 +34,30 @@ const getContact = async (req, res) => {
   }
 };
 
+const updateContact = async (req, res) => {
+  const { id } = req.params;
+  const { phone_number, work_hour, location, email } = req.body;
+  const db = req.app.locals.db;
+
+  try {
+    await db.execute(
+      " UPDATE contact SET phone_number = ?, work_hour = ?, location = ?, email = ? WHERE id = ?",
+      [phone_number, work_hour, location, email, id]
+    );
+    res.json({
+      status: "success",
+      message: "Contact updated successfully",
+      data: { id: parseInt(id), phone_number, work_hour, location, email },
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: "error", message: "Failed to update contact" });
+  }
+};
+
 module.exports = {
   createContact,
   getContact,
+  updateContact,
 };

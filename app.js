@@ -16,7 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const adminRoutes = require("./routes/admin.route");
+const contactRoutes = require("./routes/contact.route");
 
 app.use("/api/admin", adminRoutes);
+app.use("/api/contact", contactRoutes);
 
 module.exports = app;

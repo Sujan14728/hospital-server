@@ -21,7 +21,7 @@ const createGalleryImage = async (req, res) => {
     }
 
     const [result] = await db.execute(
-      "INSERT INTO galleryImage (image_url, gallery_id) VALUES (?, ?)",
+      "INSERT INTO gallery_image (image_url, gallery_id) VALUES (?, ?)",
       [image_url, gallery_id]
     );
 
@@ -50,7 +50,7 @@ const getGalleryImageById = async (req, res) => {
 
   try {
     const [rows] = await db.execute(
-      "SELECT id, image_url, gallery_id FROM galleryImage WHERE id = ?",
+      "SELECT id, image_url, gallery_id FROM gallery_image WHERE id = ?",
       [id]
     );
 
@@ -86,7 +86,7 @@ const updateGalleryImage = async (req, res) => {
 
   try {
     const [imageExists] = await db.execute(
-      "SELECT id FROM galleryImage WHERE id = ?",
+      "SELECT id FROM gallery_image WHERE id = ?",
       [id]
     );
     if (imageExists.length === 0) {
@@ -108,7 +108,7 @@ const updateGalleryImage = async (req, res) => {
     }
 
     await db.execute(
-      "UPDATE galleryImage SET image_url = ?, gallery_id = ? WHERE id = ?",
+      "UPDATE gallery_image SET image_url = ?, gallery_id = ? WHERE id = ?",
       [image_url, gallery_id, id]
     );
 
@@ -137,7 +137,7 @@ const deleteGalleryImage = async (req, res) => {
 
   try {
     const [imageExists] = await db.execute(
-      "SELECT id FROM galleryImage WHERE id = ?",
+      "SELECT id FROM gallery_image WHERE id = ?",
       [id]
     );
     if (imageExists.length === 0) {
@@ -146,7 +146,7 @@ const deleteGalleryImage = async (req, res) => {
         .json({ status: "error", message: "Gallery image not found" });
     }
 
-    await db.execute("DELETE FROM galleryImage WHERE id = ?", [id]);
+    await db.execute("DELETE FROM gallery_image WHERE id = ?", [id]);
     res.json({
       status: "success",
       data: { id: Number(id) },
@@ -193,7 +193,7 @@ const getGalleryImagesByGallery = async (req, res) => {
 
       query = `
         SELECT gi.id, gi.image_url, g.name AS gallery_name
-        FROM galleryImage gi
+        FROM gallery_image gi
         JOIN gallery g ON gi.gallery_id = g.id
         WHERE gi.gallery_id = ?
       `;
@@ -211,7 +211,7 @@ const getGalleryImagesByGallery = async (req, res) => {
 
       query = `
         SELECT gi.id, gi.image_url, g.name AS gallery_name
-        FROM galleryImage gi
+        FROM gallery_image gi
         JOIN gallery g ON gi.gallery_id = g.id
         WHERE g.name = ?
       `;

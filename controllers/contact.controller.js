@@ -56,8 +56,27 @@ const updateContact = async (req, res) => {
   }
 };
 
+const deleteContact = async (req, res) => {
+  const { id } = req.params;
+  const db = req.app.locals.db;
+
+  try {
+    await db.execute("DELETE FROM contact WHERE id = ?", [id]);
+    res.json({
+      status: "success",
+      message: "contact deleted",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to delete contact",
+    });
+  }
+};
+
 module.exports = {
   createContact,
   getContact,
   updateContact,
+  deleteContact,
 };

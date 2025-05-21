@@ -16,31 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `admin`
+-- Table structure for table `section`
 --
 
-DROP TABLE IF EXISTS `admin`;
+DROP TABLE IF EXISTS `section`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `admin` (
+CREATE TABLE `section` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `email` varchar(45) NOT NULL,
-  `password` varchar(100) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `description` text,
   `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `admin`
+-- Dumping data for table `section`
 --
 
-LOCK TABLES `admin` WRITE;
-/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
-INSERT INTO `admin` VALUES (1,'admin@gmail.com','$2b$10$4uFkWufDUOzmoI4InjvghOLiGiL7f00wJG/P8IFVw7sft93q8anIi','2025-05-20 19:38:42','2025-05-20 19:38:42');
-/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
+LOCK TABLES `section` WRITE;
+/*!40000 ALTER TABLE `section` DISABLE KEYS */;
+INSERT INTO `section` VALUES (1,'About','This is about page','2025-05-21 10:52:12','2025-05-21 10:52:12'),(3,'Home','This is home page','2025-05-21 21:20:44','2025-05-21 21:20:44');
+/*!40000 ALTER TABLE `section` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

@@ -16,31 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `admin`
+-- Table structure for table `media`
 --
 
-DROP TABLE IF EXISTS `admin`;
+DROP TABLE IF EXISTS `media`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `admin` (
+CREATE TABLE `media` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `email` varchar(45) NOT NULL,
-  `password` varchar(100) DEFAULT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `video_url` varchar(255) DEFAULT NULL,
+  `section_id` int DEFAULT NULL,
   `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `section_id` (`section_id`),
+  CONSTRAINT `media_ibfk_1` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `admin`
+-- Dumping data for table `media`
 --
 
-LOCK TABLES `admin` WRITE;
-/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
-INSERT INTO `admin` VALUES (1,'admin@gmail.com','$2b$10$4uFkWufDUOzmoI4InjvghOLiGiL7f00wJG/P8IFVw7sft93q8anIi','2025-05-20 19:38:42','2025-05-20 19:38:42');
-/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
+LOCK TABLES `media` WRITE;
+/*!40000 ALTER TABLE `media` DISABLE KEYS */;
+INSERT INTO `media` VALUES (1,'https://images.unsplash.com/photo-1739367156314-cdf4aa3718a5?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D','https://images.unsplash.com/photo-1739367156314-cdf4aa3718a5?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',1,'2025-05-21 20:50:59','2025-05-21 21:29:31'),(2,'https://images.unsplash.com/photo-1738566495797-2a2a270a23ac?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',NULL,3,'2025-05-21 21:28:28','2025-05-21 21:28:28');
+/*!40000 ALTER TABLE `media` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

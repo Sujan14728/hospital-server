@@ -12,8 +12,8 @@ const router = express.Router();
 
 router.post("/", createMedia);
 router.get("/", getAllMedia);
+router.get("/section", getMediaBySection);
 router.get("/:id", getMediaById);
-router.get("/section/:sectionId", getMediaBySection);
 router.put("/:id", updateMedia);
 router.delete("/:id", deleteMedia);
 

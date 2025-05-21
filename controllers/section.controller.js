@@ -49,6 +49,17 @@ const createSection = async (req, res) => {
   const db = req.app.locals.db;
 
   try {
+    const [existing] = await db.execute(
+      "SELECT * FROM section WHERE name = ?",
+      [name]
+    );
+    if (existing.length > 0) {
+      res.json({
+        status: "error",
+        message: "Section name already exists",
+      });
+    }
+
     const [result] = await db.execute(
       "INSERT INTO section (name, description) VALUES (?, ?)",
       [name, description]

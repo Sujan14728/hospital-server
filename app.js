@@ -17,8 +17,10 @@ app.use(cookieParser());
 
 const adminRoutes = require("./routes/admin.route");
 const contactRoutes = require("./routes/contact.route");
+const sociallinkRoutes = require("./routes/sociallink.route");
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/sociallink", sociallinkRoutes);
 
 module.exports = app;

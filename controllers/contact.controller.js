@@ -3,13 +3,20 @@ const createContact = async (req, res) => {
   const db = req.app.locals.db;
 
   try {
+    const [existing] = await db.execute("SELECT id FROM contact LIMIT 1");
+    if (existing.length > 0) {
+      return res.status(400).json({
+        status: "error",
+        message: "A contact already exists.",
+      });
+    }
     const [result] = await db.execute(
       "INSERT INTO contact (phone_number, work_hour, location, email) VALUES (?, ?, ?, ?)",
       [phone_number, work_hour, location, email]
     );
 
     res.status(201).json({
-      staus: "success",
+      status: "success",
       data: { id: result.insertId, phone_number, work_hour, location, email },
       message: "Contact created successfully!",
     });

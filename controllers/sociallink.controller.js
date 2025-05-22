@@ -33,4 +33,28 @@ const getSocialLink = async (req, res) => {
       .json({ status: "error", message: "Failed to get social links" });
   }
 };
-module.exports = { createSocialLink, getSocialLink };
+
+const updateSocialLink = async (req, res) => {
+  const { id } = req.params;
+  const { site, link } = req.body;
+  const db = req.app.locals.db;
+
+  try {
+    await db.execute(
+      "UPDATE social_links SET site = ?, link = ? WHERE id = ?",
+      [link, site, id]
+    );
+    res.json({
+      status: "success",
+      message: "Social links succussfully updated",
+      data: { id: parseInt(id), link, site },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "success",
+      message: "Failed to Update the social links",
+    });
+  }
+};
+
+module.exports = { createSocialLink, getSocialLink, updateSocialLink };

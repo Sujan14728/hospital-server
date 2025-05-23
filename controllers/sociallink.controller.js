@@ -33,6 +33,32 @@ const getSocialLink = async (req, res) => {
       .json({ status: "error", message: "Failed to get social links" });
   }
 };
+const getSocialLinkById = async (req, res) => {
+  const db = req.app.locals.db;
+  const { id } = req.params;
+  try {
+    const [sociallink] = await db.execute(
+      "SELECT * FROM social_links WHERE id = ?",
+      [id]
+    );
+    if (sociallink.length === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "Social link not found",
+      });
+    }
+    res.json({
+      status: "success",
+      data: sociallink[0],
+    });
+  } catch (error) {
+    console.error("Error on getting social link by id", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to get social link",
+    });
+  }
+};
 
 const updateSocialLink = async (req, res) => {
   const { id } = req.params;
@@ -40,21 +66,61 @@ const updateSocialLink = async (req, res) => {
   const db = req.app.locals.db;
 
   try {
+    const [existing] = await db.execute(
+      "SELECT id FROM social_links WHERE id = ?",
+      [id]
+    );
+
+    if (existing.length === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "Social link not found. Failed to update",
+      });
+    }
     await db.execute(
       "UPDATE social_links SET site = ?, link = ? WHERE id = ?",
-      [link, site, id]
+      [site, link, id]
     );
     res.json({
       status: "success",
-      message: "Social links succussfully updated",
+      message: "Social links successfully updated",
       data: { id: parseInt(id), link, site },
     });
   } catch (error) {
     res.status(500).json({
-      status: "success",
+      status: "error",
       message: "Failed to Update the social links",
     });
   }
 };
 
-module.exports = { createSocialLink, getSocialLink, updateSocialLink };
+const deleteSocialLink = async (req, res) => {
+  const db = req.app.locals.db;
+  const { id } = req.params;
+
+  try {
+    const [existing] = await db.execute(
+      "SELECT id FROM social_links WHERE id = ?",
+      [id]
+    );
+    if (existing.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Social link not found. Failed to delete",
+      });
+    }
+    await db.execute("DELETE FROM social_links WHERE id = ?", [id]);
+    res.json({
+      status: "success",
+      message: "Social link deleted successfully",
+    });
+  } catch (error) {}
+};
+
+module.exports = {
+  createSocialLink,
+  getSocialLink,
+  getSocialLinkById,
+  updateSocialLink,
+  deleteSocialLink,
+};

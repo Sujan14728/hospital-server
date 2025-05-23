@@ -41,12 +41,47 @@ const getContact = async (req, res) => {
   }
 };
 
+const getContactById = async (req, res) => {
+  const db = req.app.locals.db;
+  const { id } = req.params;
+
+  try {
+    const [contacts] = await db.execute("SELECT * FROM contact WHERE id =?", [
+      id,
+    ]);
+
+    if (contacts.length === 0) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "Contact not found" });
+    }
+
+    res.json({
+      status: "success",
+      data: contacts[0],
+    });
+  } catch (error) {
+    console.error(" Get contact error", error);
+    res.status(500).json({ status: "error", message: "Failed to get contact" });
+  }
+};
+
 const updateContact = async (req, res) => {
   const { id } = req.params;
   const { phone_number, work_hour, location, email } = req.body;
   const db = req.app.locals.db;
 
   try {
+    const [existing] = await db.execute(
+      " SELECT id FROM contact WHERE id = ?",
+      [id]
+    );
+    if (existing.length === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "Contact not found. Failed to update.",
+      });
+    }
     await db.execute(
       " UPDATE contact SET phone_number = ?, work_hour = ?, location = ?, email = ? WHERE id = ?",
       [phone_number, work_hour, location, email, id]
@@ -68,6 +103,16 @@ const deleteContact = async (req, res) => {
   const db = req.app.locals.db;
 
   try {
+    const [existing] = await db.execute(
+      " SELECT id FROM contact WHERE id = ?",
+      [id]
+    );
+    if (existing.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Contact not found. Failed to delete",
+      });
+    }
     await db.execute("DELETE FROM contact WHERE id = ?", [id]);
     res.json({
       status: "success",
@@ -76,7 +121,7 @@ const deleteContact = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       status: "error",
-      message: "Failed to delete contact",
+      message: "Contact not found. Failed to delete contact",
     });
   }
 };
@@ -84,6 +129,7 @@ const deleteContact = async (req, res) => {
 module.exports = {
   createContact,
   getContact,
+  getContactById,
   updateContact,
   deleteContact,
 };

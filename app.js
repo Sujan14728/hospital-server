@@ -19,10 +19,16 @@ const adminRoutes = require("./routes/admin.route");
 const sectionRoutes = require("./routes/section.route");
 const mediaRoutes = require("./routes/media.route");
 const galleryRoutes = require("./routes/gallery.route");
+const specialityRoutes = require("./routes/speciality.route");
+const departmentRoutes = require("./routes/department.route");
+const doctorRoutes = require("./routes/doctor.route");
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/section", sectionRoutes);
 app.use("/api/media", mediaRoutes);
 app.use("/api/gallery", galleryRoutes);
+app.use("/api/speciality", specialityRoutes);
+app.use("/api/department", departmentRoutes);
+app.use("/api/doctor", doctorRoutes);
 
 module.exports = app;

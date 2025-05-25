@@ -37,4 +37,31 @@ const getTestimonials = async (req, res) => {
   }
 };
 
-module.exports = { createTestimonials, getTestimonials };
+const getTestimonialsById = async (req, res) => {
+  const db = req.app.locals.db;
+  const { id } = req.params;
+
+  try {
+    const [testimonial] = await db.execute(
+      "SELECT * FROM testimonial WHERE id = ?",
+      [id]
+    );
+    if (testimonial === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Testimonial not found",
+      });
+    }
+
+    res.json({
+      status: "success",
+      data: testimonial[0],
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to get testimonials",
+    });
+  }
+};
+module.exports = { createTestimonials, getTestimonials, getTestimonialsById };

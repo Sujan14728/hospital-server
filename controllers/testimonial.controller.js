@@ -64,4 +64,43 @@ const getTestimonialsById = async (req, res) => {
     });
   }
 };
-module.exports = { createTestimonials, getTestimonials, getTestimonialsById };
+
+const updateTestimonial = async (req, res) => {
+  const { full_name, message, image_url, video_url } = req.body;
+  const { id } = req.params;
+  const db = req.app.locals.db;
+
+  try {
+    const [existing] = await db.execute(
+      "SELECT id FROM testimonial WHERE id = ?",
+      [id]
+    );
+    if (existing.length === 0) {
+      res.staus(404).json({
+        status: "error",
+        message: "Testimonial not found",
+      });
+    }
+
+    await db.execute(
+      "UPDATE testimonial SET full_name = ?, message = ?, image_url = ?, video_url = ? WHERE id = ?",
+      [full_name, message, image_url, video_url, id]
+    );
+
+    res.json({
+      staus: "success",
+      data: { id: parseInt(id), full_name, message, image_url, video_url },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to update testimonial",
+    });
+  }
+};
+module.exports = {
+  createTestimonials,
+  getTestimonials,
+  getTestimonialsById,
+  updateTestimonial,
+};

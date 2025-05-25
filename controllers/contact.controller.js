@@ -88,8 +88,8 @@ const updateContact = async (req, res) => {
     );
     res.json({
       status: "success",
-      message: "Contact updated successfully",
       data: { id: parseInt(id), phone_number, work_hour, location, email },
+      message: "Contact updated successfully",
     });
   } catch (error) {
     res

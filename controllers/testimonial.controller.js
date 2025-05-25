@@ -98,9 +98,39 @@ const updateTestimonial = async (req, res) => {
     });
   }
 };
+
+const deleteTestimonial = async (req, res) => {
+  const { id } = req.params;
+  const db = req.app.locals.db;
+
+  try {
+    const [existing] = await db.execute(
+      "SELECT id FROM testimonial WHERE id = ?",
+      [id]
+    );
+    if (existing.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Testimonial not found",
+      });
+    }
+
+    await db.execute("DELETE FROM testimonial WHERE id = ?", [id]);
+    res.json({
+      status: "success",
+      message: "Testimonial deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to delete testimonial",
+    });
+  }
+};
 module.exports = {
   createTestimonials,
   getTestimonials,
   getTestimonialsById,
   updateTestimonial,
+  deleteTestimonial,
 };

@@ -32,7 +32,7 @@ CREATE TABLE `media` (
   PRIMARY KEY (`id`),
   KEY `section_id` (`section_id`),
   CONSTRAINT `media_ibfk_1` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `media` (
 
 LOCK TABLES `media` WRITE;
 /*!40000 ALTER TABLE `media` DISABLE KEYS */;
-INSERT INTO `media` VALUES (1,'https://images.unsplash.com/photo-1739367156314-cdf4aa3718a5?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D','https://images.unsplash.com/photo-1739367156314-cdf4aa3718a5?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',1,'2025-05-21 20:50:59','2025-05-21 21:29:31'),(2,'https://images.unsplash.com/photo-1738566495797-2a2a270a23ac?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',NULL,3,'2025-05-21 21:28:28','2025-05-21 21:28:28');
+INSERT INTO `media` VALUES (1,'https://images.unsplash.com/photo-1739367156314-cdf4aa3718a5?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dupdated','https://images.unsplash.com/photo-1739367156314-cdf4aa3718a5?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dupdated',1,'2025-05-21 20:50:59','2025-05-24 22:51:53'),(2,'https://images.unsplash.com/photo-1738566495797-2a2a270a23ac?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',NULL,3,'2025-05-21 21:28:28','2025-05-21 21:28:28'),(3,'https://images.unsplash.com/photo-1738566495797-2a2a270a23ac?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',NULL,3,'2025-05-24 22:51:32','2025-05-24 22:51:32');
 /*!40000 ALTER TABLE `media` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-21 21:32:25
+-- Dump completed on 2025-05-25  9:47:43

@@ -16,30 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `gallery`
+-- Table structure for table `doctor`
 --
 
-DROP TABLE IF EXISTS `gallery`;
+DROP TABLE IF EXISTS `doctor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `gallery` (
+CREATE TABLE `doctor` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `thumbnail_url` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `fullName` varchar(255) NOT NULL,
+  `speciality_id` int NOT NULL,
+  `department_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_speciality` (`speciality_id`),
+  KEY `fk_department` (`department_id`),
+  CONSTRAINT `fk_department` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_speciality` FOREIGN KEY (`speciality_id`) REFERENCES `speciality` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `gallery`
+-- Dumping data for table `doctor`
 --
 
-LOCK TABLES `gallery` WRITE;
-/*!40000 ALTER TABLE `gallery` DISABLE KEYS */;
-INSERT INTO `gallery` VALUES (2,'MediCamp 2081','https://img.freepik.com/free-vector/children-vaccination-poster-template_74855-15848.jpg?ga=GA1.1.666535962.1727080154&semt=ais_hybrid&w=740','2025-05-21 16:06:50','2025-05-21 16:06:50'),(3,'Medical Camp 2082','','2025-05-24 17:07:08','2025-05-24 17:08:03');
-/*!40000 ALTER TABLE `gallery` ENABLE KEYS */;
+LOCK TABLES `doctor` WRITE;
+/*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
+INSERT INTO `doctor` VALUES (1,'Dr. Alice Johnson',1,2),(2,'Dr. Bob Smith',2,1),(3,'Dr. Carol Evans',3,3),(4,'Dr. Daniel White',1,4),(5,'Dr. Emily Davis',4,5),(6,'Dr. Bhuwan Ojha',4,4),(8,'Dr. Prayush Adhikary',4,4);
+/*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-25  9:47:43
+-- Dump completed on 2025-05-25  9:47:44

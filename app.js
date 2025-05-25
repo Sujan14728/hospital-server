@@ -19,10 +19,12 @@ const adminRoutes = require("./routes/admin.route");
 const contactRoutes = require("./routes/contact.route");
 const sociallinkRoutes = require("./routes/sociallink.route");
 const newsRoutes = require("./routes/news.route");
+const testimonialRoutes = require("./routes/testimonial.route");
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/sociallink", sociallinkRoutes);
 app.use("/api/news", newsRoutes);
+app.use("/api/testimonial", testimonialRoutes);
 
 module.exports = app;

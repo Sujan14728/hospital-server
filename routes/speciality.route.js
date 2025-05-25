@@ -7,12 +7,13 @@ const {
   deleteSpeciality,
   getDoctorsBySpeciality,
 } = require("../controllers/speciality.controller");
+const verifyAdmin = require("../middlewares/auth/verifyAdmin");
 const router = express.Router();
 
 router.get("/", getAllSpecialities);
 router.get("/:id", getSpecialityById);
-router.post("/", createSpeciality);
-router.put("/:id", updateSpeciality);
-router.delete("/:id", deleteSpeciality);
+router.post("/",verifyAdmin, createSpeciality);
+router.put("/:id",verifyAdmin, updateSpeciality);
+router.delete("/:id",verifyAdmin, deleteSpeciality);
 
 module.exports = router;

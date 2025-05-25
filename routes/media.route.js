@@ -7,14 +7,15 @@ const {
   updateMedia,
   deleteMedia,
 } = require("../controllers/media.controller");
+const verifyAdmin = require("../middlewares/auth/verifyAdmin");
 
 const router = express.Router();
 
-router.post("/", createMedia);
+router.post("/",verifyAdmin, createMedia);
 router.get("/", getAllMedia);
 router.get("/section", getMediaBySection);
 router.get("/:id", getMediaById);
-router.put("/:id", updateMedia);
-router.delete("/:id", deleteMedia);
+router.put("/:id",verifyAdmin, updateMedia);
+router.delete("/:id",verifyAdmin, deleteMedia);
 
 module.exports = router;

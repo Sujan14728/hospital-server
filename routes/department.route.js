@@ -6,12 +6,13 @@ const {
   updateDepartment,
   deleteDepartment,
 } = require("../controllers/department.controller");
+const verifyAdmin = require("../middlewares/auth/verifyAdmin");
 const router = express.Router();
 
 router.get("/", getAllDepartments);
 router.get("/:id", getDepartmentById);
-router.post("/", createDepartment);
-router.put("/:id", updateDepartment);
-router.delete("/:id", deleteDepartment);
+router.post("/", verifyAdmin, createDepartment);
+router.put("/:id", verifyAdmin, updateDepartment);
+router.delete("/:id", verifyAdmin, deleteDepartment);
 
 module.exports = router;

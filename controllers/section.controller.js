@@ -80,6 +80,7 @@ const createSection = async (req, res) => {
 };
 
 const updateSection = async (req, res) => {
+  console.log(req);
   const { id } = req.params;
   const { name, description } = req.body;
   const db = req.app.locals.db;

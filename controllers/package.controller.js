@@ -72,4 +72,46 @@ const getPackageById = async (req, res) => {
     });
   }
 };
-module.exports = { createPackage, getPackage, getPackageById };
+
+const updatePackage = async (req, res) => {
+  const { title, price, discounted_price, status, checks, whatsappUrl } =
+    req.body;
+  const { id } = req.params;
+  const db = req.app.locals.db;
+
+  try {
+    const [existing] = await db.execute(
+      " SELECT id FROM package WHERE id = ?",
+      [id]
+    );
+    if (existing.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "package not found",
+      });
+    }
+    await db.execute(
+      "UPDATE package SET title = ?, price =?, discounted_price = ?, status = ?, checks = ?, whatsappUrl = ?",
+      [title, price, discounted_price, status, checks, whatsappUrl]
+    );
+    res.json({
+      status: "success",
+      data: {
+        id: parseInt(id),
+        title,
+        price,
+        discounted_price,
+        status,
+        checks,
+        whatsappUrl,
+      },
+      messgae: "Package successfully updated",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to update",
+    });
+  }
+};
+module.exports = { createPackage, getPackage, getPackageById, updatePackage };

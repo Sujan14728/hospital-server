@@ -46,4 +46,30 @@ const getPackage = async (req, res) => {
     });
   }
 };
-module.exports = { createPackage, getPackage };
+
+const getPackageById = async (req, res) => {
+  const { id } = req.params;
+  const db = req.app.locals.db;
+
+  try {
+    const [package] = await db.execute("SELECT * FROM package WHERE id = ?", [
+      id,
+    ]);
+    if (package.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Package not found",
+      });
+    }
+    res.json({
+      status: "success",
+      data: package[0],
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to get the package",
+    });
+  }
+};
+module.exports = { createPackage, getPackage, getPackageById };

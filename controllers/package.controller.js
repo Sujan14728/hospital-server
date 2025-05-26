@@ -114,4 +114,36 @@ const updatePackage = async (req, res) => {
     });
   }
 };
-module.exports = { createPackage, getPackage, getPackageById, updatePackage };
+
+const deletePackage = async (req, res) => {
+  const { id } = req.params;
+  const db = req.app.locals.db;
+  try {
+    const [existing] = await db.execute("SELECT id FROM package WHERE id = ?", [
+      id,
+    ]);
+    if (existing.length === 0) {
+      req.status(404).json({
+        status: "error",
+        message: "Package not found.",
+      });
+    }
+    await db.execute("DELETE FROM package WHERE id = ?", [id]);
+    res.json({
+      status: "success",
+      message: "Package deleted successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to delete package.",
+    });
+  }
+};
+module.exports = {
+  createPackage,
+  getPackage,
+  getPackageById,
+  updatePackage,
+  deletePackage,
+};

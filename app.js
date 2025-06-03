@@ -23,6 +23,8 @@ const specialityRoutes = require("./routes/speciality.route");
 const departmentRoutes = require("./routes/department.route");
 const doctorRoutes = require("./routes/doctor.route");
 const packageRoutes = require("./routes/package.route");
+const contactRoutes = require("./routes/contact.route");
+const sociallinkRoutes = require("./routes/sociallink.route");
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/section", sectionRoutes);
@@ -32,5 +34,7 @@ app.use("/api/speciality", specialityRoutes);
 app.use("/api/department", departmentRoutes);
 app.use("/api/doctor", doctorRoutes);
 app.use("/api/package", packageRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/sociallink", sociallinkRoutes);
 
 module.exports = app;

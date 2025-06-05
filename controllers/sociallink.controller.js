@@ -57,4 +57,39 @@ const updateSocialLink = async (req, res) => {
   }
 };
 
-module.exports = { createSocialLink, getSocialLink, updateSocialLink };
+const deleteSocialLink = async (req, res) => {
+  const { id } = req.params;
+  const db = req.app.locals.db;
+
+  try {
+    const [result] = await db.execute("DELETE FROM social_links WHERE id = ?", [
+      id,
+    ]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "Social link not found",
+      });
+    }
+
+    res.json({
+      status: "success",
+      message: "Social link deleted successfully",
+      data: { id: parseInt(id) },
+    });
+  } catch (error) {
+    console.error("Delete social link error", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to delete social link",
+    });
+  }
+};
+
+module.exports = {
+  createSocialLink,
+  getSocialLink,
+  updateSocialLink,
+  deleteSocialLink,
+};

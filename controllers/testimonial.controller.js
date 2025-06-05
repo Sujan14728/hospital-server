@@ -46,7 +46,7 @@ const getTestimonialsById = async (req, res) => {
       "SELECT * FROM testimonial WHERE id = ?",
       [id]
     );
-    if (testimonial === 0) {
+    if (testimonial.length === 0) {
       res.status(404).json({
         status: "error",
         message: "Testimonial not found",

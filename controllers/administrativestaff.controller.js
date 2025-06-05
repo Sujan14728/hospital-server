@@ -105,9 +105,39 @@ const updateAdministrative = async (req, res) => {
   }
 };
 
+const deleteAdministrative = async (req, res) => {
+  const { id } = req.params;
+  const db = req.app.locals.db;
+
+  try {
+    const [existing] = await db.execute(
+      "SELECT id FROM administrativestaff WHERE id = ?",
+      [id]
+    );
+    if (existing.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Data not found",
+      });
+    }
+
+    await db.execute("DELETE FROM administrativestaff WHERE id = ?", [id]);
+    res.json({
+      status: "message",
+      message: "Successfully deleted",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Deleted successfully",
+    });
+  }
+};
+
 module.exports = {
   createAdministrativeStaff,
   getAdministrative,
   getAdministrativeById,
   updateAdministrative,
+  deleteAdministrative,
 };

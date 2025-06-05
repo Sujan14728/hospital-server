@@ -21,6 +21,7 @@ const sociallinkRoutes = require("./routes/sociallink.route");
 const newsRoutes = require("./routes/news.route");
 const testimonialRoutes = require("./routes/testimonial.route");
 const packageRoutes = require("./routes/package.route");
+const administrativestaffRoutes = require("./routes/administrativestaff.route");
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/contact", contactRoutes);
@@ -28,5 +29,6 @@ app.use("/api/sociallink", sociallinkRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/testimonial", testimonialRoutes);
 app.use("/api/package", packageRoutes);
+app.use("/api/administrativestaff", administrativestaffRoutes);
 
 module.exports = app;

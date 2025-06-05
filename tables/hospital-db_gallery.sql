@@ -16,35 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `package`
+-- Table structure for table `gallery`
 --
 
-DROP TABLE IF EXISTS `package`;
+DROP TABLE IF EXISTS `gallery`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `package` (
+CREATE TABLE `gallery` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `discounted_price` decimal(10,2) NOT NULL,
-  `status` varchar(50) NOT NULL,
-  `checks` text,
-  `whatsappUrl` varchar(255) DEFAULT NULL,
-  `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `title` (`title`)
+  `name` varchar(255) NOT NULL,
+  `thumbnail_url` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `package`
+-- Dumping data for table `gallery`
 --
 
-LOCK TABLES `package` WRITE;
-/*!40000 ALTER TABLE `package` DISABLE KEYS */;
-INSERT INTO `package` VALUES (1,'Basic Health Checkup Plus',5500.00,5000.00,'active','Blood Test, Urine Test, ECG','https://wa.me/1234567890','2025-05-24 16:14:47','2025-05-24 16:15:34'),(3,'test',5000.00,4500.00,'inactive','Blood Test, Urine Test','https://wa.me/12345678901','2025-05-24 17:13:34','2025-05-24 17:13:34');
-/*!40000 ALTER TABLE `package` ENABLE KEYS */;
+LOCK TABLES `gallery` WRITE;
+/*!40000 ALTER TABLE `gallery` DISABLE KEYS */;
+INSERT INTO `gallery` VALUES (2,'MediCamp 2081','https://img.freepik.com/free-vector/children-vaccination-poster-template_74855-15848.jpg?ga=GA1.1.666535962.1727080154&semt=ais_hybrid&w=740','2025-05-21 16:06:50','2025-05-21 16:06:50'),(3,'Medical Camp 2082','','2025-05-24 17:07:08','2025-05-24 17:08:03');
+/*!40000 ALTER TABLE `gallery` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -56,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-25  9:47:44
+-- Dump completed on 2025-05-25  9:47:43

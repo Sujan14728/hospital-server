@@ -6,12 +6,13 @@ const {
   updateContact,
   deleteContact,
 } = require("../controllers/contact.controller");
+const verifyAdmin = require("../middlewares/auth/verifyAdmin");
 
 const router = express.Router();
-router.post("/", createContact);
+router.post("/", verifyAdmin, createContact);
 router.get("/", getContact);
 router.get("/:id", getContactById);
-router.put("/:id", updateContact);
-router.delete("/:id", deleteContact);
+router.put("/:id", verifyAdmin, updateContact);
+router.delete("/:id", verifyAdmin, deleteContact);
 
 module.exports = router;

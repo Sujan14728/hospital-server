@@ -16,35 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `package`
+-- Table structure for table `speciality`
 --
 
-DROP TABLE IF EXISTS `package`;
+DROP TABLE IF EXISTS `speciality`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `package` (
+CREATE TABLE `speciality` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `discounted_price` decimal(10,2) NOT NULL,
-  `status` varchar(50) NOT NULL,
-  `checks` text,
-  `whatsappUrl` varchar(255) DEFAULT NULL,
-  `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `title` (`title`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `package`
+-- Dumping data for table `speciality`
 --
 
-LOCK TABLES `package` WRITE;
-/*!40000 ALTER TABLE `package` DISABLE KEYS */;
-INSERT INTO `package` VALUES (1,'Basic Health Checkup Plus',5500.00,5000.00,'active','Blood Test, Urine Test, ECG','https://wa.me/1234567890','2025-05-24 16:14:47','2025-05-24 16:15:34'),(3,'test',5000.00,4500.00,'inactive','Blood Test, Urine Test','https://wa.me/12345678901','2025-05-24 17:13:34','2025-05-24 17:13:34');
-/*!40000 ALTER TABLE `package` ENABLE KEYS */;
+LOCK TABLES `speciality` WRITE;
+/*!40000 ALTER TABLE `speciality` DISABLE KEYS */;
+INSERT INTO `speciality` VALUES (6,'Cardiology'),(7,'ENT-updated'),(2,'Neurology'),(1,'Oncology'),(3,'Opthanmology'),(4,'Physiology');
+/*!40000 ALTER TABLE `speciality` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

@@ -28,10 +28,9 @@ const loginAdmin = async (req, res) => {
   const db = req.app.locals.db;
 
   try {
-    const [rows] = await db.execute(
-      "SELECT * FROM admin WHERE email = ?",
-      [email]
-    );
+    const [rows] = await db.execute("SELECT * FROM admin WHERE email = ?", [
+      email,
+    ]);
 
     if (rows.length === 0) {
       return res
@@ -49,7 +48,7 @@ const loginAdmin = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: admin.id, email: admin.email },
+      { id: admin.id, email: admin.email, role: "admin" },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
@@ -111,10 +110,11 @@ const updateAdmin = async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    await db.execute(
-      "UPDATE admin SET email = ?, password = ? WHERE id = ?",
-      [email, hashedPassword, id]
-    );
+    await db.execute("UPDATE admin SET email = ?, password = ? WHERE id = ?", [
+      email,
+      hashedPassword,
+      id,
+    ]);
 
     res.json({
       status: "success",

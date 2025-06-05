@@ -16,35 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `package`
+-- Table structure for table `gallery_image`
 --
 
-DROP TABLE IF EXISTS `package`;
+DROP TABLE IF EXISTS `gallery_image`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `package` (
+CREATE TABLE `gallery_image` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `discounted_price` decimal(10,2) NOT NULL,
-  `status` varchar(50) NOT NULL,
-  `checks` text,
-  `whatsappUrl` varchar(255) DEFAULT NULL,
-  `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `image_url` varchar(255) NOT NULL,
+  `gallery_id` int NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `title` (`title`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `gallery_id` (`gallery_id`),
+  CONSTRAINT `gallery_image_ibfk_1` FOREIGN KEY (`gallery_id`) REFERENCES `gallery` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `package`
+-- Dumping data for table `gallery_image`
 --
 
-LOCK TABLES `package` WRITE;
-/*!40000 ALTER TABLE `package` DISABLE KEYS */;
-INSERT INTO `package` VALUES (1,'Basic Health Checkup Plus',5500.00,5000.00,'active','Blood Test, Urine Test, ECG','https://wa.me/1234567890','2025-05-24 16:14:47','2025-05-24 16:15:34'),(3,'test',5000.00,4500.00,'inactive','Blood Test, Urine Test','https://wa.me/12345678901','2025-05-24 17:13:34','2025-05-24 17:13:34');
-/*!40000 ALTER TABLE `package` ENABLE KEYS */;
+LOCK TABLES `gallery_image` WRITE;
+/*!40000 ALTER TABLE `gallery_image` DISABLE KEYS */;
+INSERT INTO `gallery_image` VALUES (1,'https://example.com/images/nature1.jpg',2,'2025-05-21 16:16:43','2025-05-21 16:16:43'),(3,'https://example.com/images/nature2.jpg',2,'2025-05-21 16:31:01','2025-05-21 16:31:01'),(4,'https://example.com/images/nature2.jpg',2,'2025-05-24 17:08:23','2025-05-24 17:08:23');
+/*!40000 ALTER TABLE `gallery_image` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: hospital-db
 -- ------------------------------------------------------
--- Server version	9.1.0
+-- Server version	8.4.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,12 +24,12 @@ DROP TABLE IF EXISTS `testimonial`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `testimonial` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `full_name` varchar(255) NOT NULL,
-  `message` text NOT NULL,
-  `image_url` varchar(2083) DEFAULT NULL,
-  `video_url` varchar(2083) DEFAULT NULL,
+  `full_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `message` text COLLATE utf8mb4_general_ci NOT NULL,
+  `image_url` varchar(2083) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `video_url` varchar(2083) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +38,7 @@ CREATE TABLE `testimonial` (
 
 LOCK TABLES `testimonial` WRITE;
 /*!40000 ALTER TABLE `testimonial` DISABLE KEYS */;
+INSERT INTO `testimonial` VALUES (2,'Michael Lee','A seamless and professional experience from start to finish.','https://randomuser.me/api/portraits/men/32.jpg',''),(3,'Emily Carter','Fantastic team and great results. Will definitely use this again!','https://randomuser.me/api/portraits/women/68.jpg',''),(4,'Jane Watson','This service completely exceeded my expectations. Highly recommended!','https://randomuser.me/api/portraits/women/44.jpg','');
 /*!40000 ALTER TABLE `testimonial` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-24 23:42:02
+-- Dump completed on 2025-06-05 10:56:49

@@ -31,10 +31,29 @@ const createNews = async (req, res) => {
 
 const getNews = async (req, res) => {
   const db = req.app.locals.db;
+  const { limit } = req.query;
 
   try {
-    const [news] = await db.execute("SELECT * FROM news");
-    res.json({
+    let news;
+
+    if (limit !== undefined) {
+      const parsedLimit = Number(limit);
+
+      if (isNaN(parsedLimit) || parsedLimit < 0) {
+        return res.status(400).json({
+          status: "error",
+          message: "Invalid 'limit' query parameter",
+        });
+      }
+
+      // Inject the limit directly into the query string (safe after validation)
+      const query = `SELECT * FROM news LIMIT ${parsedLimit}`;
+      [news] = await db.execute(query);
+    } else {
+      [news] = await db.execute("SELECT * FROM news");
+    }
+
+    res.status(200).json({
       status: "success",
       data: news,
     });

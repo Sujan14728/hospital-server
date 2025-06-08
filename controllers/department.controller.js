@@ -1,3 +1,5 @@
+const slugify = require("slugify");
+
 const getAllDepartments = async (req, res) => {
   const db = req.app.locals.db;
   try {
@@ -41,30 +43,61 @@ const getDepartmentById = async (req, res) => {
   }
 };
 
-const createDepartment = async (req, res) => {
-  const { name } = req.body;
+const getDepartmentBySlug = async (req, res) => {
+  const { slug } = req.params;
   const db = req.app.locals.db;
   try {
+    const [rows] = await db.execute("SELECT * FROM department WHERE slug = ?", [
+      slug,
+    ]);
+    if (rows.length === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "Department not found",
+      });
+    }
+    res.json({
+      status: "success",
+      data: rows[0],
+      message: "Department retrieved successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to retrieve department",
+    });
+  }
+};
+
+const createDepartment = async (req, res) => {
+  const { name, nepali, description, image_url } = req.body;
+  const slug = slugify(name, { lower: true, strict: true });
+  const db = req.app.locals.db;
+
+  try {
     const [existing] = await db.execute(
-      "SELECT * FROM department WHERE name = ?",
-      [name]
+      "SELECT * FROM department WHERE name = ? OR slug = ?",
+      [name, slug]
     );
     if (existing.length > 0) {
       return res.status(400).json({
         status: "error",
-        message: "Department name already exists",
+        message: "Department name or slug already exists",
       });
     }
+
     const [result] = await db.execute(
-      "INSERT INTO department (name) VALUES (?)",
-      [name]
+      "INSERT INTO department (name, slug, nepali, description, image_url) VALUES (?, ?, ?, ?, ?)",
+      [name, slug, nepali || null, description || null, image_url || null]
     );
+
     res.status(201).json({
       status: "success",
-      data: { id: result.insertId, name },
+      data: { id: result.insertId, name, slug, nepali, description, image_url },
       message: "Department created successfully",
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       status: "error",
       message: "Failed to create department",
@@ -74,17 +107,19 @@ const createDepartment = async (req, res) => {
 
 const updateDepartment = async (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
+  const { name, nepali, description, image_url } = req.body;
+  const slug = slugify(name, { lower: true, strict: true });
   const db = req.app.locals.db;
+
   try {
     const [existing] = await db.execute(
-      "SELECT id FROM department WHERE name = ? AND id != ?",
-      [name, id]
+      "SELECT id FROM department WHERE (name = ? OR slug = ?) AND id != ?",
+      [name, slug, id]
     );
     if (existing.length > 0) {
       return res.status(400).json({
         status: "error",
-        message: "Department name already exists",
+        message: "Department name or slug already exists",
       });
     }
 
@@ -98,13 +133,18 @@ const updateDepartment = async (req, res) => {
       });
     }
 
-    await db.execute("UPDATE department SET name = ? WHERE id = ?", [name, id]);
+    await db.execute(
+      "UPDATE department SET name = ?, slug = ?, nepali = ?, description = ?, image_url = ? WHERE id = ?",
+      [name, slug, nepali || null, description || null, image_url || null, id]
+    );
+
     res.json({
       status: "success",
-      data: { id: parseInt(id), name },
+      data: { id: parseInt(id), name, slug, nepali, description, image_url },
       message: "Department updated successfully",
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       status: "error",
       message: "Failed to update department",
@@ -115,6 +155,7 @@ const updateDepartment = async (req, res) => {
 const deleteDepartment = async (req, res) => {
   const { id } = req.params;
   const db = req.app.locals.db;
+
   try {
     const [check] = await db.execute("SELECT id FROM department WHERE id = ?", [
       id,
@@ -143,6 +184,7 @@ const deleteDepartment = async (req, res) => {
 module.exports = {
   getAllDepartments,
   getDepartmentById,
+  getDepartmentBySlug,
   createDepartment,
   updateDepartment,
   deleteDepartment,

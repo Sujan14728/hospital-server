@@ -2,14 +2,33 @@ const slugify = require("slugify");
 
 const getAllServices = async (req, res) => {
   const db = req.app.locals.db;
+  const { limit } = req.query;
+
   try {
-    const [rows] = await db.execute("SELECT * FROM services");
+    let rows;
+    if (limit !== undefined) {
+      const parsedLimit = Number(limit);
+
+      if (isNaN(parsedLimit) || parsedLimit <= 0) {
+        return res.status(400).json({
+          status: "error",
+          message: "Invalid 'limit' query parameter",
+        });
+      }
+
+      const query = `SELECT * FROM services LIMIT ${parsedLimit}`;
+      [rows] = await db.execute(query);
+    } else {
+      [rows] = await db.execute("SELECT * FROM services");
+    }
+
     res.json({
       status: "success",
       data: rows,
       message: "Services retrieved successfully",
     });
   } catch (error) {
+    console.error("Error retrieving services:", error);
     res.status(500).json({
       status: "error",
       message: "Failed to retrieve services",

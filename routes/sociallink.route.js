@@ -1,19 +1,20 @@
 const express = require("express");
-const {
-  createSocialLink,
-  getSocialLink,
-  getSocialLinkById,
-  updateSocialLink,
-  deleteSocialLink,
-} = require("../controllers/sociallink.controller");
+
 const verifyAdmin = require("../middlewares/auth/verifyAdmin");
+const {
+  createSocialLinks,
+  getSocialLinks,
+  updateSocialLinks,
+  getSocialLinksById,
+  deleteSocialLinks,
+} = require("../controllers/sociallink.controller");
 
 const router = express.Router();
 
-router.post("/", verifyAdmin, createSocialLink);
-router.get("/", getSocialLink);
-router.put("/:id", verifyAdmin, updateSocialLink);
-router.get("/:id", getSocialLinkById);
-router.delete("/:id", verifyAdmin, deleteSocialLink);
+router.post("/", verifyAdmin, createSocialLinks);
+router.get("/", getSocialLinks);
+router.put("/:id", updateSocialLinks);
+router.get("/:id", getSocialLinksById);
+router.delete("/:id", verifyAdmin, deleteSocialLinks);
 
 module.exports = router;

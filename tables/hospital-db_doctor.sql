@@ -23,16 +23,18 @@ DROP TABLE IF EXISTS `doctor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `doctor` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `fullName` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int NOT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `fullName` varchar(255) NOT NULL,
+  `qualification` varchar(255) DEFAULT NULL,
   `speciality_id` int NOT NULL,
-  `department_id` int NOT NULL,
+  `department_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_speciality` (`speciality_id`),
-  KEY `fk_department` (`department_id`),
-  CONSTRAINT `fk_department` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_speciality` FOREIGN KEY (`speciality_id`) REFERENCES `speciality` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `speciality_id` (`speciality_id`),
+  KEY `department_id` (`department_id`),
+  CONSTRAINT `doctor_ibfk_1` FOREIGN KEY (`speciality_id`) REFERENCES `speciality` (`id`),
+  CONSTRAINT `doctor_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +43,6 @@ CREATE TABLE `doctor` (
 
 LOCK TABLES `doctor` WRITE;
 /*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
-INSERT INTO `doctor` VALUES (1,'Dr. Alice Johnson',1,2),(2,'Dr. Bob Smith',2,1),(3,'Dr. Carol Evans',3,3),(4,'Dr. Daniel White',1,4),(5,'Dr. Emily Davis',4,5),(6,'Dr. Bhuwan Ojha',4,4),(8,'Dr. Prayush Adhikary',4,4),(9,'Dr. Who',3,2);
 /*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-05 10:56:49
+-- Dump completed on 2025-06-09 15:39:48

@@ -57,7 +57,8 @@ const getDoctorById = async (req, res) => {
 };
 
 const createDoctor = async (req, res) => {
-  const { fullName, speciality_id, department_id } = req.body;
+  const { fullName, qualification, image_url, speciality_id, department_id } =
+    req.body;
   const db = req.app.locals.db;
 
   try {
@@ -65,7 +66,6 @@ const createDoctor = async (req, res) => {
       "SELECT id FROM speciality WHERE id = ?",
       [speciality_id]
     );
-
     if (specialityCheck.length === 0) {
       return res.status(400).json({
         status: "error",
@@ -77,7 +77,6 @@ const createDoctor = async (req, res) => {
       "SELECT id FROM department WHERE id = ?",
       [department_id]
     );
-
     if (departmentCheck.length === 0) {
       return res.status(400).json({
         status: "error",
@@ -86,13 +85,21 @@ const createDoctor = async (req, res) => {
     }
 
     const [result] = await db.execute(
-      "INSERT INTO doctor (fullName, speciality_id, department_id) VALUES (?, ?, ?)",
-      [fullName, speciality_id, department_id]
+      `INSERT INTO doctor (fullName, qualification, image_url, speciality_id, department_id) 
+       VALUES (?, ?, ?, ?, ?)`,
+      [fullName, qualification, image_url, speciality_id, department_id]
     );
 
     res.status(201).json({
       status: "success",
-      data: { id: result.insertId, fullName, speciality_id, department_id },
+      data: {
+        id: result.insertId,
+        fullName,
+        qualification,
+        image_url,
+        speciality_id,
+        department_id,
+      },
       message: "Doctor created successfully",
     });
   } catch (error) {
@@ -102,9 +109,11 @@ const createDoctor = async (req, res) => {
     });
   }
 };
+
 const updateDoctor = async (req, res) => {
   const { id } = req.params;
-  const { fullName, speciality_id, department_id } = req.body;
+  const { fullName, qualification, image_url, speciality_id, department_id } =
+    req.body;
   const db = req.app.locals.db;
 
   try {
@@ -112,7 +121,6 @@ const updateDoctor = async (req, res) => {
       "SELECT id FROM doctor WHERE id = ?",
       [id]
     );
-
     if (doctorCheck.length === 0) {
       return res.status(404).json({
         status: "error",
@@ -124,7 +132,6 @@ const updateDoctor = async (req, res) => {
       "SELECT id FROM speciality WHERE id = ?",
       [speciality_id]
     );
-
     if (specialityCheck.length === 0) {
       return res.status(400).json({
         status: "error",
@@ -136,7 +143,6 @@ const updateDoctor = async (req, res) => {
       "SELECT id FROM department WHERE id = ?",
       [department_id]
     );
-
     if (departmentCheck.length === 0) {
       return res.status(400).json({
         status: "error",
@@ -145,13 +151,22 @@ const updateDoctor = async (req, res) => {
     }
 
     await db.execute(
-      "UPDATE doctor SET fullName = ?, speciality_id = ?, department_id = ? WHERE id = ?",
-      [fullName, speciality_id, department_id, id]
+      `UPDATE doctor 
+       SET fullName = ?, qualification = ?, image_url = ?, speciality_id = ?, department_id = ? 
+       WHERE id = ?`,
+      [fullName, qualification, image_url, speciality_id, department_id, id]
     );
 
     res.json({
       status: "success",
-      data: { id: parseInt(id), fullName, speciality_id, department_id },
+      data: {
+        id: parseInt(id),
+        fullName,
+        qualification,
+        image_url,
+        speciality_id,
+        department_id,
+      },
       message: "Doctor updated successfully",
     });
   } catch (error) {

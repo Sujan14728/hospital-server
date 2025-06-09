@@ -72,7 +72,6 @@ const createDoctor = async (req, res) => {
         message: "Invalid speciality ID",
       });
     }
-
     const [departmentCheck] = await db.execute(
       "SELECT id FROM department WHERE id = ?",
       [department_id]
@@ -89,7 +88,6 @@ const createDoctor = async (req, res) => {
        VALUES (?, ?, ?, ?, ?)`,
       [fullName, qualification, image_url, speciality_id, department_id]
     );
-
     res.status(201).json({
       status: "success",
       data: {
@@ -103,6 +101,7 @@ const createDoctor = async (req, res) => {
       message: "Doctor created successfully",
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       status: "error",
       message: "Failed to create doctor",
@@ -170,6 +169,7 @@ const updateDoctor = async (req, res) => {
       message: "Doctor updated successfully",
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       status: "error",
       message: "Failed to update doctor",

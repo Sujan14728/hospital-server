@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `doctor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `doctor` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `image_url` varchar(255) DEFAULT NULL,
   `fullName` varchar(255) NOT NULL,
   `qualification` varchar(255) DEFAULT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `doctor` (
   KEY `department_id` (`department_id`),
   CONSTRAINT `doctor_ibfk_1` FOREIGN KEY (`speciality_id`) REFERENCES `speciality` (`id`),
   CONSTRAINT `doctor_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,6 +43,7 @@ CREATE TABLE `doctor` (
 
 LOCK TABLES `doctor` WRITE;
 /*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
+INSERT INTO `doctor` VALUES (1,'https://pbs.twimg.com/profile_images/759087511356313604/OJ0w7WIS_400x400.jpg','Dr. Who','MD',3,2),(2,'https://pbs.twimg.com/profile_images/759087511356313604/OJ0w7WIS_400x400.jpg','Dr. Bhuwan Ojha','MBBS',2,1);
 /*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-09 15:39:48
+-- Dump completed on 2025-06-09 16:04:37

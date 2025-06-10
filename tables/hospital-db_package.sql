@@ -24,12 +24,12 @@ DROP TABLE IF EXISTS `package`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `package` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `discounted_price` decimal(10,2) NOT NULL,
-  `status` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `checks` text COLLATE utf8mb4_general_ci,
-  `whatsappUrl` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `checks` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `whatsappUrl` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-09 15:39:47
+-- Dump completed on 2025-06-10 17:40:57

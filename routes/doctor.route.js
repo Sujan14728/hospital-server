@@ -16,7 +16,7 @@ router.get("/speciality", getDoctorsBySpeciality);
 router.get("/department", getDoctorsByDepartment);
 router.get("/:id", getDoctorById);
 router.post("/", createDoctor);
-router.put("/:id",  updateDoctor);
+router.put("/:id", verifyAdmin, updateDoctor);
 router.delete("/:id", verifyAdmin, deleteDoctor);
 
 module.exports = router;

@@ -1,11 +1,18 @@
 const createGalleryImage = async (req, res) => {
-  const { image_url, gallery_id } = req.body;
+  const { media_url, media_type, gallery_id } = req.body;
   const db = req.app.locals.db;
 
-  if (!image_url || !gallery_id) {
+  if (!media_url || !media_type || !gallery_id) {
     return res.status(400).json({
       status: "error",
-      message: "Both image_url and gallery_id are required",
+      message: "media_url, media_type, and gallery_id are required",
+    });
+  }
+
+  if (!["image", "video"].includes(media_type)) {
+    return res.status(400).json({
+      status: "error",
+      message: "media_type must be either 'image' or 'video'",
     });
   }
 
@@ -21,20 +28,21 @@ const createGalleryImage = async (req, res) => {
     }
 
     const [result] = await db.execute(
-      "INSERT INTO gallery_image (image_url, gallery_id) VALUES (?, ?)",
-      [image_url, gallery_id]
+      "INSERT INTO gallery_image (media_url, media_type, gallery_id) VALUES (?, ?, ?)",
+      [media_url, media_type, gallery_id]
     );
 
     res.status(201).json({
       status: "success",
-      data: { id: result.insertId, image_url, gallery_id },
-      message: "Gallery image created successfully",
+      data: { id: result.insertId, media_url, media_type, gallery_id },
+      message: "Gallery media created successfully",
     });
   } catch (error) {
-    console.error("Create gallery image error:", error);
-    res
-      .status(500)
-      .json({ status: "error", message: "Failed to create gallery image" });
+    console.error("Create gallery media error:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to create gallery media",
+    });
   }
 };
 
@@ -50,78 +58,119 @@ const getGalleryImageById = async (req, res) => {
 
   try {
     const [rows] = await db.execute(
-      "SELECT id, image_url, gallery_id FROM gallery_image WHERE id = ?",
+      "SELECT id, media_url, media_type, gallery_id FROM gallery_image WHERE id = ?",
       [id]
     );
 
     if (rows.length === 0) {
       return res
         .status(404)
-        .json({ status: "error", message: "Gallery image not found" });
+        .json({ status: "error", message: "Gallery media not found" });
     }
 
     res.json({
       status: "success",
       data: rows[0],
-      message: "Gallery image retrieved successfully",
+      message: "Gallery media retrieved successfully",
     });
   } catch (error) {
-    console.error("Get gallery image error:", error);
+    console.error("Get gallery media error:", error);
     res
       .status(500)
-      .json({ status: "error", message: "Failed to retrieve gallery image" });
+      .json({ status: "error", message: "Failed to retrieve gallery media" });
   }
 };
 
 const updateGalleryImage = async (req, res) => {
   const { id } = req.params;
-  const { image_url, gallery_id } = req.body;
+  const { media_url, media_type, gallery_id } = req.body;
   const db = req.app.locals.db;
 
   if (!id || isNaN(id)) {
-    return res
-      .status(400)
-      .json({ status: "error", message: "Valid image ID is required" });
+    return res.status(400).json({
+      status: "error",
+      message: "Valid image ID is required",
+    });
+  }
+
+  if (media_type && !["image", "video"].includes(media_type)) {
+    return res.status(400).json({
+      status: "error",
+      message: "media_type must be either 'image' or 'video'",
+    });
   }
 
   try {
-    const [imageExists] = await db.execute(
-      "SELECT id FROM gallery_image WHERE id = ?",
+    const [existing] = await db.execute(
+      "SELECT * FROM gallery_image WHERE id = ?",
       [id]
     );
-    if (imageExists.length === 0) {
-      return res
-        .status(404)
-        .json({ status: "error", message: "Gallery image not found" });
+
+    if (existing.length === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "Gallery media not found",
+      });
     }
 
+    // Optional: check if gallery_id is changing and exists
     if (gallery_id) {
-      const [galleryExists] = await db.execute(
+      const [galleryCheck] = await db.execute(
         "SELECT id FROM gallery WHERE id = ?",
         [gallery_id]
       );
-      if (galleryExists.length === 0) {
-        return res
-          .status(404)
-          .json({ status: "error", message: "Gallery not found" });
+      if (galleryCheck.length === 0) {
+        return res.status(404).json({
+          status: "error",
+          message: "Gallery not found",
+        });
       }
     }
 
+    // Build dynamic SQL and params
+    const fields = [];
+    const values = [];
+
+    if (media_url) {
+      fields.push("media_url = ?");
+      values.push(media_url);
+    }
+
+    if (media_type) {
+      fields.push("media_type = ?");
+      values.push(media_type);
+    }
+
+    if (gallery_id) {
+      fields.push("gallery_id = ?");
+      values.push(gallery_id);
+    }
+
+    if (fields.length === 0) {
+      return res.status(400).json({
+        status: "error",
+        message: "At least one field must be provided for update",
+      });
+    }
+
+    values.push(id); // for WHERE clause
+
     await db.execute(
-      "UPDATE gallery_image SET image_url = ?, gallery_id = ? WHERE id = ?",
-      [image_url, gallery_id, id]
+      `UPDATE gallery_image SET ${fields.join(", ")} WHERE id = ?`,
+      values
     );
 
     res.json({
       status: "success",
-      data: { id: Number(id), image_url, gallery_id },
-      message: "Gallery image updated successfully",
+      data: { id: Number(id), media_url, media_type, gallery_id },
+      message: "Gallery media updated successfully",
     });
   } catch (error) {
-    console.error("Update gallery image error:", error);
-    res
-      .status(500)
-      .json({ status: "error", message: "Failed to update gallery image" });
+    console.error("Update gallery media error:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to update gallery media",
+    });
   }
 };
 
@@ -163,7 +212,7 @@ const deleteGalleryImage = async (req, res) => {
 const getGalleryImagesByGallery = async (req, res) => {
   const { gallery_id, gallery_name } = req.query;
   const db = req.app.locals.db;
-  console.log(req.query);
+
   if (!gallery_id && !gallery_name) {
     return res.status(400).json({
       status: "error",
@@ -192,7 +241,7 @@ const getGalleryImagesByGallery = async (req, res) => {
       }
 
       query = `
-        SELECT gi.id, gi.image_url, g.name AS gallery_name
+        SELECT gi.id, gi.media_url, gi.media_type, g.name AS gallery_name
         FROM gallery_image gi
         JOIN gallery g ON gi.gallery_id = g.id
         WHERE gi.gallery_id = ?
@@ -210,7 +259,7 @@ const getGalleryImagesByGallery = async (req, res) => {
       }
 
       query = `
-        SELECT gi.id, gi.image_url, g.name AS gallery_name
+        SELECT gi.id, gi.media_url, gi.media_type, g.name AS gallery_name
         FROM gallery_image gi
         JOIN gallery g ON gi.gallery_id = g.id
         WHERE g.name = ?
@@ -223,20 +272,20 @@ const getGalleryImagesByGallery = async (req, res) => {
     if (rows.length === 0) {
       return res.status(404).json({
         status: "error",
-        message: "No images found for the given gallery",
+        message: "No media found for the given gallery",
       });
     }
 
     res.json({
       status: "success",
       data: rows,
-      message: "Gallery images retrieved successfully",
+      message: "Gallery media retrieved successfully",
     });
   } catch (error) {
-    console.error("Get gallery images error:", error);
+    console.error("Get gallery media error:", error);
     res
       .status(500)
-      .json({ status: "error", message: "Failed to retrieve gallery images" });
+      .json({ status: "error", message: "Failed to retrieve gallery media" });
   }
 };
 

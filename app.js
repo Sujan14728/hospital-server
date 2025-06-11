@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-
+const path = require("path");
 const app = express();
 
 app.use(
@@ -13,6 +13,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "/uploads")));
 app.use(cookieParser());
 
 const adminRoutes = require("./routes/admin.route");

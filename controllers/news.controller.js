@@ -47,10 +47,10 @@ const getNews = async (req, res) => {
       }
 
       // Inject the limit directly into the query string (safe after validation)
-      const query = `SELECT * FROM news LIMIT ${parsedLimit}`;
+      const query = `SELECT * FROM news ORDER BY createdAt DESC LIMIT ${parsedLimit}`;
       [news] = await db.execute(query);
     } else {
-      [news] = await db.execute("SELECT * FROM news");
+      [news] = await db.execute("SELECT * FROM news  ORDER BY createdAt DESC");
     }
 
     res.status(200).json({
@@ -71,17 +71,32 @@ const getNewsById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const [news] = await db.execute("SELECT * FROM news WHERE id = ?", [id]);
-    if (news.length === 0) {
+    const [[current]] = await db.execute("SELECT * FROM news WHERE id = ?", [
+      id,
+    ]);
+    if (!current) {
       return res.status(404).json({
         status: "error",
         message: "News not found",
       });
     }
 
+    const [[previous]] = await db.execute(
+      "SELECT id, title FROM news WHERE id < ? ORDER BY id DESC LIMIT 1",
+      [id]
+    );
+    const [[next]] = await db.execute(
+      "SELECT id, title FROM news WHERE id > ? ORDER BY id ASC LIMIT 1",
+      [id]
+    );
+
     res.json({
       status: "success",
-      data: news[0],
+      data: {
+        ...current,
+        previous: previous || null,
+        next: next || null,
+      },
     });
   } catch (error) {
     console.error("Error getting news by id", error);

@@ -6,12 +6,13 @@ const {
   updateAdministrative,
   deleteAdministrative,
 } = require("../controllers/administrativestaff.controller");
+const verifyAdmin = require("../middlewares/auth/verifyAdmin");
 
 const router = express.Router();
 
-router.post("/", createAdministrativeStaff);
+router.post("/", verifyAdmin, createAdministrativeStaff);
 router.get("/", getAdministrative);
 router.get("/:id", getAdministrativeById);
-router.put("/:id", updateAdministrative);
-router.delete("/:id", deleteAdministrative);
+router.put("/:id", verifyAdmin, updateAdministrative);
+router.delete("/:id", verifyAdmin, deleteAdministrative);
 module.exports = router;

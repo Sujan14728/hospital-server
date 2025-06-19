@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.post("/", verifyAdmin, createSocialLinks);
 router.get("/", getSocialLinks);
-router.put("/:id", updateSocialLinks);
+router.put("/:id",verifyAdmin, updateSocialLinks);
 router.get("/:id", getSocialLinksById);
 router.delete("/:id", verifyAdmin, deleteSocialLinks);
 

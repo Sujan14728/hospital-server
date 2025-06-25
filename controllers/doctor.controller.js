@@ -6,6 +6,7 @@ const getAllDoctors = async (req, res) => {
       FROM doctor
       JOIN speciality ON doctor.speciality_id = speciality.id
       JOIN department ON doctor.department_id = department.id
+      ORDER BY doctor.display_order ASC
     `);
 
     res.json({
@@ -57,8 +58,14 @@ const getDoctorById = async (req, res) => {
 };
 
 const createDoctor = async (req, res) => {
-  const { fullName, qualification, image_url, speciality_id, department_id } =
-    req.body;
+  const {
+    fullName,
+    qualification,
+    image_url,
+    speciality_id,
+    department_id,
+    display_order,
+  } = req.body;
   const db = req.app.locals.db;
 
   try {
@@ -84,9 +91,16 @@ const createDoctor = async (req, res) => {
     }
 
     const [result] = await db.execute(
-      `INSERT INTO doctor (fullName, qualification, image_url, speciality_id, department_id) 
-       VALUES (?, ?, ?, ?, ?)`,
-      [fullName, qualification, image_url, speciality_id, department_id]
+      `INSERT INTO doctor (fullName, qualification, image_url, speciality_id, department_id, display_order) 
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        fullName,
+        qualification,
+        image_url,
+        speciality_id,
+        department_id,
+        display_order,
+      ]
     );
     res.status(201).json({
       status: "success",
@@ -111,8 +125,15 @@ const createDoctor = async (req, res) => {
 
 const updateDoctor = async (req, res) => {
   const { id } = req.params;
-  const { fullName, qualification, image_url, speciality_id, department_id } =
-    req.body;
+  const {
+    fullName,
+    qualification,
+    image_url,
+    speciality_id,
+    department_id,
+    display_order,
+  } = req.body;
+  console.log(req.body);
   const db = req.app.locals.db;
 
   try {
@@ -151,9 +172,17 @@ const updateDoctor = async (req, res) => {
 
     await db.execute(
       `UPDATE doctor 
-       SET fullName = ?, qualification = ?, image_url = ?, speciality_id = ?, department_id = ? 
+       SET fullName = ?, qualification = ?, image_url = ?, speciality_id = ?, department_id = ?, display_order = ? 
        WHERE id = ?`,
-      [fullName, qualification, image_url, speciality_id, department_id, id]
+      [
+        fullName,
+        qualification,
+        image_url,
+        speciality_id,
+        department_id,
+        display_order,
+        id,
+      ]
     );
 
     res.json({
@@ -165,6 +194,7 @@ const updateDoctor = async (req, res) => {
         image_url,
         speciality_id,
         department_id,
+        display_order,
       },
       message: "Doctor updated successfully",
     });
@@ -243,7 +273,8 @@ const getDoctorsBySpeciality = async (req, res) => {
       FROM doctor d
       JOIN speciality s ON d.speciality_id = s.id
       JOIN department dept ON d.department_id = dept.id
-      WHERE d.speciality_id = ?`,
+      WHERE d.speciality_id = ?
+      ORDER BY d.display_order ASC`,
       [speciality_id]
     );
 
@@ -299,7 +330,8 @@ const getDoctorsByDepartment = async (req, res) => {
       FROM doctor d
       JOIN speciality s ON d.speciality_id = s.id
       JOIN department dept ON d.department_id = dept.id
-      WHERE d.department_id = ?`,
+      WHERE d.department_id = ?
+      ORDER BY d.display_order ASC`,
       [department_id]
     );
 

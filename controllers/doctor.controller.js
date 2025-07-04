@@ -60,15 +60,19 @@ const getDoctorById = async (req, res) => {
 const createDoctor = async (req, res) => {
   const {
     fullName,
+    nmcNo,
     qualification,
+    description,
     image_url,
     speciality_id,
     department_id,
     display_order,
   } = req.body;
+
   const db = req.app.locals.db;
 
   try {
+    // Check if speciality_id is valid
     const [specialityCheck] = await db.execute(
       "SELECT id FROM speciality WHERE id = ?",
       [speciality_id]
@@ -79,6 +83,8 @@ const createDoctor = async (req, res) => {
         message: "Invalid speciality ID",
       });
     }
+
+    // Check if department_id is valid
     const [departmentCheck] = await db.execute(
       "SELECT id FROM department WHERE id = ?",
       [department_id]
@@ -90,27 +96,43 @@ const createDoctor = async (req, res) => {
       });
     }
 
+    // Insert new doctor
     const [result] = await db.execute(
-      `INSERT INTO doctor (fullName, qualification, image_url, speciality_id, department_id, display_order) 
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO doctor (
+        fullName, 
+        nmcNo, 
+        qualification, 
+        description, 
+        image_url, 
+        speciality_id, 
+        department_id, 
+        display_order
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         fullName,
+        nmcNo,
         qualification,
+        description,
         image_url,
         speciality_id,
         department_id,
         display_order,
       ]
     );
+
+    // Success response
     res.status(201).json({
       status: "success",
       data: {
         id: result.insertId,
         fullName,
+        nmcNo,
         qualification,
+        description,
         image_url,
         speciality_id,
         department_id,
+        display_order,
       },
       message: "Doctor created successfully",
     });
@@ -127,16 +149,19 @@ const updateDoctor = async (req, res) => {
   const { id } = req.params;
   const {
     fullName,
+    nmcNo,
     qualification,
+    description,
     image_url,
     speciality_id,
     department_id,
     display_order,
   } = req.body;
-  console.log(req.body);
+
   const db = req.app.locals.db;
 
   try {
+    // Check if doctor exists
     const [doctorCheck] = await db.execute(
       "SELECT id FROM doctor WHERE id = ?",
       [id]
@@ -148,6 +173,7 @@ const updateDoctor = async (req, res) => {
       });
     }
 
+    // Validate speciality ID
     const [specialityCheck] = await db.execute(
       "SELECT id FROM speciality WHERE id = ?",
       [speciality_id]
@@ -159,6 +185,7 @@ const updateDoctor = async (req, res) => {
       });
     }
 
+    // Validate department ID
     const [departmentCheck] = await db.execute(
       "SELECT id FROM department WHERE id = ?",
       [department_id]
@@ -170,13 +197,23 @@ const updateDoctor = async (req, res) => {
       });
     }
 
+    // Update doctor
     await db.execute(
       `UPDATE doctor 
-       SET fullName = ?, qualification = ?, image_url = ?, speciality_id = ?, department_id = ?, display_order = ? 
+       SET fullName = ?, 
+           nmcNo = ?, 
+           qualification = ?, 
+           description = ?, 
+           image_url = ?, 
+           speciality_id = ?, 
+           department_id = ?, 
+           display_order = ? 
        WHERE id = ?`,
       [
         fullName,
+        nmcNo,
         qualification,
+        description,
         image_url,
         speciality_id,
         department_id,
@@ -190,7 +227,9 @@ const updateDoctor = async (req, res) => {
       data: {
         id: parseInt(id),
         fullName,
+        nmcNo,
         qualification,
+        description,
         image_url,
         speciality_id,
         department_id,
@@ -199,13 +238,14 @@ const updateDoctor = async (req, res) => {
       message: "Doctor updated successfully",
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({
       status: "error",
       message: "Failed to update doctor",
     });
   }
 };
+
 
 const deleteDoctor = async (req, res) => {
   const { id } = req.params;
